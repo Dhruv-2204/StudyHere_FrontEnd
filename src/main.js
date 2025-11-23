@@ -2,28 +2,44 @@ const app = new Vue({
             el: '#app',
             data: {
                 // Hardcoded lessons data
-                lessons: [{
-                        "id": 1,
-                        "subject": "Piano Lessons",
-                        "location": "London City",
-                        "price": 50,
-                        "spaces": 5
-                    },
-                    {
-                        "id": 2,
-                        "subject": "Guitar Lessons",
-                        "location": "Manchester",
-                        "price": 40, 
-                        "spaces": 3
-                    },
-                    {
-                        "id": 3,
-                        "subject": "Math Tutoring",
-                        "location": "Birmingham",
-                        "price": 30,
-                        "spaces": 4
-                    }
-                ],
+                // lessons: [{
+                //         "id": 1,
+                //         "subject": "Piano Lessons",
+                //         "location": "London City",
+                //         "price": 50,
+                //         "spaces": 5
+                //     },
+                //     {
+                //         "id": 2,
+                //         "subject": "Guitar Lessons",
+                //         "location": "Manchester",
+                //         "price": 40, 
+                //         "spaces": 3
+                //     },
+                //     {
+                //         "id": 3,
+                //         "subject": "Math Tutoring",
+                //         "location": "Birmingham",
+                //         "price": 30,
+                //         "spaces": 4
+                //     },
+                //     {
+                //         "id": 24,
+                //         "subject": "Guitars Lessons",
+                //         "location": "Manchester",
+                //         "price": 40, 
+                //         "spaces": 3
+                //     },
+                //     {
+                //         "id": 43,
+                //         "subject": "Maths Tutoring",
+                //         "location": "Birmingham",
+                //         "price": 30,
+                //         "spaces": 4
+                //     },
+                // ],
+                lessons: [],
+                apiBaseUrl: 'http://localhost:3000/api',
                 searchQuery: '',
                 sortBy: 'subject',
                 sortOrder: 'asc',
@@ -66,6 +82,23 @@ const app = new Vue({
                     this.checkoutName = '';
                     this.checkoutPhone = '';
                     this.showCart = false;
-                }
+                },
+                // FETCH LESSONS FROM BACKEND
+                async fetchLessons() {
+                    try {
+                        const response = await fetch(`${this.apiBaseUrl}/lessons`);
+                        if (response.ok) {
+                            this.lessons = await response.json();
+                        } else {
+                            console.error('Failed to fetch lessons');
+                        }
+                    } catch (error) {
+                        console.error('Error fetching lessons:', error);
+                    }
+                },
+            },
+            mounted() {
+                // Fetch lessons when the app is mounted
+                this.fetchLessons();
             }
         });

@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- cdn for Vue2.js -->
     <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
-    <!-- tailwind css 4.1 cdn -->
-    <!-- <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.17/dist/tailwind.min.css" rel="stylesheet">
-      -->
+    <!-- cdn for tailwind css -->
     <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
 
     <title>Document</title>
 </head>
@@ -24,7 +25,9 @@
         <!-- Page name -->
         <header class="bg-blue-800 text-white p-4 shadow-md">
             <div class="container mx-auto flex justify-center">
-                <h1 class="text-3xl font-bold">StudyHere</h1>
+                <h1 class="text-3xl font-bold ">
+                    <i class="fas fa-graduation-cap mr-2"></i>StudyHere
+                </h1>
                 <div class="ml-auto flex items-center bg-blue-700 text-2xl space-x-4 border-gray-300 border-l-4 pl-4 border-t-4 pr-4 hover:border-white-100 hover:bg-blue-800">
                     <button @click="showCart=!showCart " :disabled="cart.length === 0">🛒 Cart ({{cart.length}})</button>
                 </div>
@@ -48,12 +51,15 @@
                             <option value="location">Location</option>
                         </select>
                     </div>
-                    <div>
-                        <label for="">Order</label>
-                        <select v-model="sortOrder" class="p-2 rounded">
-                            <option value="asc">Ascending</option>
-                            <option value="desc">Descending</option>
-                        </select>
+                    <div class="flex items-center">
+                        <label>
+                            <input type="radio" value="asc" v-model="sortOrder" class="mr-1">
+                            Ascending
+                        </label>
+                        <label class="ml-4">
+                            <input type="radio" value="desc" v-model="sortOrder" class="mr-1">
+                            Descending
+                        </label>
                     </div>
                 </div>
 
@@ -62,16 +68,17 @@
             <!-- lessons display -->
              <!-- Need to add selection for image -->
             <div v-if= "!showCart">
-
-                <div v-for="lesson in FilteredLessons" :key="lesson.id" class=" bg-white p-4 mb-4 rounded shadow hover:shadow-lg">
-                    <div class="mb-2 flex justify-center">
-                        <img src="images/PianoLesson.png" alt="">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div v-for="lesson in FilteredLessons" :key="lesson.id" class=" bg-white p-4 mb-4 rounded shadow hover:shadow-lg">
+                        <div class="mb-2 flex justify-center">
+                            <img src="images/PianoLesson.png" alt="">
+                        </div>
+                        <h2 class="text-2xl font-bold mb-2">{{ lesson.subject }}</h2>
+                        <p class="mb-1">Location: {{ lesson.location }}</p>
+                        <p class="mb-1">Price: ${{ lesson.price }}</p>
+                        <p>Space left: {{lesson.spaces}}</p>
+                        <button @click="addToCart(lesson)" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700" :disabled="lesson.spaces===0">Add to Cart</button>
                     </div>
-                    <h2 class="text-2xl font-bold mb-2">{{ lesson.subject }}</h2>
-                    <p class="mb-1">Location: {{ lesson.location }}</p>
-                    <p class="mb-1">Price: ${{ lesson.price }}</p>
-                    <p>Space left: {{lesson.spaces}}</p>
-                    <button @click="addToCart(lesson)" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700" :disabled="lesson.spaces===0">Add to Cart</button>
                 </div>
             </div>
 
@@ -114,9 +121,7 @@
                     <button @click="checkout" class="bg-teal-500 text-white px-4 py-2 rounded hover:bg-green-700 w-full">Proceed to Checkout</button>
                 </div>
             </div>
-        
 
-                
         </main>
 
         <footer class="bg-gray-700">
