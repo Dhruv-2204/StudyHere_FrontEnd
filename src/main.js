@@ -230,7 +230,20 @@ const app = new Vue({
                     }
                 },
 
-                
+                // UPDATE LESSON SPACES ON BACKEND
+                async updateLessonSpaces(lessonId, newSpaces) {
+                    try {
+                        await fetch(`${this.apiBaseUrl}/lessons/${lessonId}`, {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ spaces: newSpaces })
+                        });
+                    } catch (error) {
+                        console.error('Error updating lesson spaces:', error);
+                    }
+                },
 
                 // FETCH LESSONS FROM BACKEND
                 async fetchLessons() {
