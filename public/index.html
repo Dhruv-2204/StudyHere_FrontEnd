@@ -70,16 +70,53 @@
             <div v-if= "!showCart">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <div v-for="lesson in FilteredLessons" :key="lesson.id" class=" bg-white p-4 mb-4 rounded shadow hover:shadow-lg">
-                        <div class="mb-2 flex justify-center">
-                            <!-- <img src="getSubjectIcon(lesson.subject)" alt=""> -->
+                        <!-- Large Banner Icon Area -->
+                        <div class="h-40 bg-gradient-to-br from-sky-100 to-sky-50 flex items-center justify-center relative overflow-hidden">
+                            <div class="absolute inset-0 opacity-10 flex items-center justify-center">
+                                <i :class="getSubjectIcon(lesson.subject)" class="text-gray-300 text-9xl"></i>
+                            </div>
+                            <div class="relative z-10 flex items-center justify-center">
                                 <i :class="getSubjectIcon(lesson.subject)" class="text-sky-600 text-6xl drop-shadow-lg"></i>
+                                 <!-- <img :src="getImageUrl(lesson.subject)" alt="Lesson image" class="w-100 h-100 object-contain"/> -->
 
+                            </div>
+                            <!-- Spaces Badge -->
+                            <span class="absolute top-3 right-3 bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md z-10">
+                                {{ lesson.spaces }} spaces
+                            </span>
                         </div>
-                        <h2 class="text-2xl font-bold mb-2">{{ lesson.subject }}</h2>
-                        <p class="mb-1">Location: {{ lesson.location }}</p>
-                        <p class="mb-1">Price: ${{ lesson.price }}</p>
-                        <p>Space left: {{lesson.spaces}}</p>
-                        <button @click="addToCart(lesson)" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700" :disabled="lesson.spaces===0">Add to Cart</button>
+                        <!-- Card Content -->
+                        <div class="p-5">
+                            <!-- Lesson Title -->
+                            <h3 class="font-bold text-xl text-gray-900 mb-2">{{ lesson.subject }}</h3>
+                            
+                            <!-- Details Grid -->
+                            <div class="space-y-2 mb-4">
+                                <div class="flex items-center text-sm text-gray-700">
+                                    <i class="fas fa-map-marker-alt mr-2 text-sky-500 w-4"></i>
+                                    <span>{{ lesson.location }}</span>
+                                </div>
+                                <div class="flex items-center text-sm text-gray-700">
+                                    <i class="fas fa-pound-sign mr-2 text-green-500 w-4"></i>
+                                    <span class="font-semibold">£{{ lesson.price }}</span>
+                                </div>
+                                <!-- Optional metadata badges -->
+                                <div class="flex items-center gap-2 mt-3">
+                                    <span v-if="lesson.duration" class="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs font-medium">{{ lesson.duration }}</span>
+                                    <span v-if="lesson.level" class="bg-purple-100 text-purple-700 px-2 py-1 rounded text-xs font-medium">{{ lesson.level }}</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Add to Cart Button -->
+                            <button 
+                                @click="addToCart(lesson)"
+                                :disabled="lesson.spaces === 0"
+                                class="w-full bg-sky-500 hover:bg-sky-600 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
+                                :class="{'bg-gray-400 cursor-not-allowed hover:bg-gray-400': lesson.spaces === 0}">
+                                <i class="fas fa-cart-plus"></i>
+                                {{ lesson.spaces === 0 ? 'Sold Out' : 'Add to Cart' }}
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
