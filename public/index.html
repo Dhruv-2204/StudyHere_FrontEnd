@@ -71,7 +71,9 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <div v-for="lesson in FilteredLessons" :key="lesson.id" class=" bg-white p-4 mb-4 rounded shadow hover:shadow-lg">
                         <div class="mb-2 flex justify-center">
-                            <img src="images/PianoLesson.png" alt="">
+                            <!-- <img src="getSubjectIcon(lesson.subject)" alt=""> -->
+                                <i :class="getSubjectIcon(lesson.subject)" class="text-sky-600 text-6xl drop-shadow-lg"></i>
+
                         </div>
                         <h2 class="text-2xl font-bold mb-2">{{ lesson.subject }}</h2>
                         <p class="mb-1">Location: {{ lesson.location }}</p>

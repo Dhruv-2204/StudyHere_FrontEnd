@@ -83,6 +83,7 @@ const app = new Vue({
                     this.checkoutPhone = '';
                     this.showCart = false;
                 },
+
                 // FETCH LESSONS FROM BACKEND
                 async fetchLessons() {
                     try {
@@ -96,6 +97,45 @@ const app = new Vue({
                         console.error('Error fetching lessons:', error);
                     }
                 },
+
+                getSubjectIcon(subject) {
+                    const icons = {
+                        'Math': 'fas fa-calculator',
+                        'English': 'fas fa-book',
+                        'Music': 'fas fa-music',
+                        'Science': 'fas fa-flask',
+                        'Art': 'fas fa-palette',
+                        'Piano': 'fas fa-keyboard',
+                        'Guitar': 'fas fa-guitar',
+                        'Crochet': 'fas fa-yarn',
+                        'Robotics': 'fas fa-robot',
+                        'Cooking': 'fas fa-utensils',
+                        'Drama': 'fas fa-theater-masks',
+                        'Karate': 'fas fa-fist-raised'
+                    };
+                    return icons[subject] || 'fas fa-graduation-cap';
+                },
+
+                getImageUrl(subject) {
+                    const images = {
+                        'Math': 'maths.jpg',
+                        'English': 'english.jpg',
+                        'Music': 'music.jpg',
+                        'Science': 'science.jpg',
+                        'Art': 'art.jpg',
+                        'Piano': 'piano.jpg',
+                        'Guitar': 'guitar.jpg',
+                        'Crochet': 'crochet.jpg',
+                        'Robotics': 'robotics.jpg',
+                        'Cooking': 'cooking.jpg',
+                        'Drama': 'drama.jpg',
+                        'Karate': 'karate.jpg'
+
+                    };
+                    finalImage = images[subject] || 'default.jpg';
+                    return `http://localhost:3000/images/${finalImage}`;
+                }
+
             },
             mounted() {
                 // Fetch lessons when the app is mounted
