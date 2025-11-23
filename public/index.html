@@ -7,7 +7,11 @@
     <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
     <!-- cdn for tailwind css -->
     <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+    <!-- Load Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- custom css for dark mode -->
+    <link rel="stylesheet" href="styles/darkmode.css">
+
 
 
     <title>Document</title>
@@ -15,21 +19,34 @@
 <body class="bg-gray-300 ">
     
 
-    <!-- Need to add header
-     search bar
-     shopping cart + checkout etc
-     display lesson with details and btn
+    <!-- Need to add 
+    
      footer -->
 
     <div id="app">
         <!-- Page name -->
-        <header class="bg-blue-800 text-white p-4 shadow-md">
-            <div class="container mx-auto flex justify-center">
-                <h1 class="text-3xl font-bold ">
-                    <i class="fas fa-graduation-cap mr-2"></i>StudyHere
+        <header class="bg-sky-600 text-white p-4 shadow-md">
+            <div class="container mx-auto flex justify-between items-center">
+                <h1 class="text-4xl text center font-bold">
+                    <i class="fas fa-graduation-cap mr-6"></i>StudyHere
                 </h1>
-                <div class="ml-auto flex items-center bg-blue-700 text-2xl space-x-4 border-gray-300 border-l-4 pl-4 border-t-4 pr-4 hover:border-white-100 hover:bg-blue-800">
-                    <button @click="showCart=!showCart " :disabled="cart.length === 0">🛒 Cart ({{cart.length}})</button>
+                <div class="flex items-center gap-3">
+                    <!-- Dark Mode Toggle Button -->
+                    <button @click="toggleDarkMode"
+                        class="bg-sky-700 hover:bg-sky-800 px-3 py-2 rounded flex items-center text-white group"
+                        :title="darkMode ? 'Light Mode' : 'Dark Mode'">
+                        <i :class="darkMode ? 'fas fa-sun' : 'fas fa-moon'"
+                        class="text-lg transform transition-transform duration-300 ease-in-out group-hover:scale-125 group-hover:rotate-14 group-hover:text-yellow-300"></i>
+                    </button>
+                    <button 
+                        @click="showCart = !showCart" 
+                        :disabled="cart.length === 0"
+                        class="bg-sky-700 hover:bg-sky-800 px-4 py-2 rounded flex items-center group transition-all duration-300 ease-in-out"
+                        :class="{'bg-gray-400 cursor-not-allowed': cart.length === 0}">
+
+                        <i class="fas fa-shopping-cart mr-2 text-white transform transition-transform duration-300 ease-in-out group-hover:-translate-y-1 group-hover:scale-110"></i>
+                        Cart ({{ cart.length }})
+                    </button>
                 </div>
             </div>
         </header>
@@ -147,7 +164,7 @@
                     </div>
                 </div>
 
-                <!-- checkout -->
+                <!-- Checkout Form-->
                 <div v-if="cart.length > 0" class="border-t pt-6">
                     <h3 class="text-lg font-semibold mb-4 text-gray-800">Checkout</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">

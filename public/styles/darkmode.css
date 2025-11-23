@@ -1,0 +1,84 @@
+/* Dark mode CSS overrides */
+body.dark-mode {
+    background-color: #1f2937;
+    color: #f3f4f6;
+}
+
+body.dark-mode .bg-white {
+    background-color: #374151 !important;
+}
+
+body.dark-mode .text-gray-700,
+body.dark-mode .text-gray-800,
+body.dark-mode .text-gray-900 {
+    color: #e5e7eb !important;
+}
+
+body.dark-mode .bg-gray-50 {
+    background-color: #4b5563 !important;
+}
+
+body.dark-mode .border-gray-200,
+body.dark-mode .border-gray-300 {
+    border-color: #4b5563 !important;
+}
+
+body.dark-mode input,
+body.dark-mode select {
+    background-color: #4b5563 !important;
+    color: #f3f4f6 !important;
+    border-color: #6b7280 !important;
+}
+
+body.dark-mode .bg-sky-600 {
+    background-color: #0c4a6e !important;
+}
+
+body.dark-mode .text-gray-500,
+body.dark-mode .text-gray-600 {
+    color: #d1d5db !important;
+}
+
+body.dark-mode .bg-gray-500 {
+    background-color: #6b7280 !important;
+}
+
+body.dark-mode .hover\:bg-gray-600:hover {
+    background-color: #4b5563 !important;
+}
+
+body.dark-mode .bg-green-100 {
+    background-color: #374151 !important;
+}
+
+body.dark-mode .text-green-800 {
+    color: #86efac !important;
+}
+
+body.dark-mode .bg-sky-100 {
+    background-color: #0c4a6e !important;
+}
+
+body.dark-mode .text-sky-600 {
+    color: #38bdf8 !important;
+}
+
+body.dark-mode .bg-gray-100 {
+    background-color: #374151 !important;
+}
+
+body.dark-mode .text-gray-400 {
+    color: #9ca3af !important;
+}
+
+body.dark-mode .bg-gray-800 {
+    background-color: #111827 !important;
+}
+
+body.dark-mode .text-red-500 {
+    color: #f87171 !important;
+}
+
+body.dark-mode .hover\:bg-red-50:hover {
+    background-color: #374151 !important;
+}

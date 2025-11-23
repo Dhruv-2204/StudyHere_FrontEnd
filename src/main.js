@@ -46,7 +46,8 @@ const app = new Vue({
                 cart: [],
                 checkoutName: '',
                 checkoutPhone: '',
-                showCart: false
+                showCart: false,
+                darkMode: false
             },
             computed: {
                 FilteredLessons() {
@@ -160,7 +161,15 @@ const app = new Vue({
                     };
                     finalImage = images[subject] || 'default.jpg';
                     return `http://localhost:3000/images/${finalImage}`;
-                }
+                },
+                toggleDarkMode() {
+            this.darkMode = !this.darkMode;
+            if (this.darkMode) {
+                document.body.classList.add('dark-mode');
+            } else {
+                document.body.classList.remove('dark-mode');
+            }
+        }
 
             },
             mounted() {
