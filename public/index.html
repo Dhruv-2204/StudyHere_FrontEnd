@@ -163,30 +163,71 @@
 
             <!-- cart page -->
             
-            <div if="showCart" v-show="showCart">
-                <div class=" bg-white p-4 mb-4 rounded shadow hover:shadow-lg">
-                    <h2 class="font-bold text-2xl text-center">Shopping Cart</h2>
+            <div v-if="showCart" class="bg-white rounded-lg shadow-lg p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800">
+                        <i class="fas fa-shopping-cart mr-2 text-sky-500"></i>Shopping Cart
+                    </h2>
+                    <button 
+                        @click="showCart = false"
+                        class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg">
+                        <i class="fas fa-arrow-left mr-2"></i>Back to Lessons
+                    </button>
+                </div>
 
-                    <!-- cart items -->
-                    
-                    <div v-if ="cart.length > 0 " class="space-y-4 mb-6">
-                        <div v-for="(item, index) in cart" :key="index" class="border-b pb-2 mb-2 flex justify-between items-center ">
-                            <h3 class="text-xl font-semibold">{{ item.subject }}</h3>
-                            <p>{{ item.location }}</p>
-                            <p>${{ item.price }}</p>
-                            
-                            <button @click="removeFromCart(index)" class="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-700 ">Remove</button>
+                <!-- Cart Items -->
+                <div v-if="cart.length > 0" class="space-y-4 mb-6">
+                    <div 
+                        v-for="(item, index) in cart" 
+                        :key="index"
+                        class="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-12 h-12 bg-sky-100 rounded-lg flex items-center justify-center">
+                                <i :class="getSubjectIcon(item.subject)" class="text-sky-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-gray-900">{{ item.subject }}</h4>
+                                <p class="text-sm text-gray-600">{{ item.location }} • £{{ item.price }} per unit</p>
+                            </div>
                         </div>
-                    </div>
-                    
-                    <div v-else class="text-center text-xl font-semibold">
-                        <p>Your cart is empty. {{cart.Length}}</p>
-                        <br><br>
-                        <button @click="showCart=!showCart" class="border-b bg-blue-300">Go back to lesson</button>
+
+                        <!-- Quantity Controls and Price -->
+                        <div class="flex items-center space-x-4">
+                            <!-- Quantity Counter -->
+                            <div class="flex items-center border border-gray-300 rounded-lg bg-gray-50">
+                                <button 
+                                    @click="decreaseCartItemQuantity(index)"
+                                    class="px-3 py-1 text-gray-600 hover:text-gray-900 hover:bg-gray-100">
+                                    <i class="fas fa-minus text-sm"></i>
+                                </button>
+                                <span class="px-3 py-1 font-semibold text-gray-900 min-w-[2rem] text-center">{{ item.quantity || 1 }}</span>
+                                <button 
+                                    @click="increaseCartItemQuantity(index)"
+                                    class="px-3 py-1 text-gray-600 hover:text-gray-900 hover:bg-gray-100">
+                                    <i class="fas fa-plus text-sm"></i>
+                                </button>
+                            </div>
+
+                            <!-- Subtotal -->
+                            <span class="font-bold text-gray-900 min-w-[4rem] text-right">£{{ (item.price * (item.quantity || 1)).toFixed(2) }}</span>
+
+                            <!-- Delete Button -->
+                            <button 
+                                @click="removeFromCart(index)"
+                                class="text-red-500 hover:text-red-700 hover:bg-red-50 p-2 rounded-full transition-colors">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Checkout Form-->
+                <!-- Empty Cart Message -->
+                <div v-else class="text-center py-8">
+                    <i class="fas fa-shopping-cart text-gray-300 text-4xl mb-4"></i>
+                    <p class="text-gray-500 text-lg">Your cart is empty</p>
+                </div>
+
+                <!-- Checkout Form -->
                 <div v-if="cart.length > 0" class="border-t pt-6">
                     <h3 class="text-lg font-semibold mb-4 text-gray-800">Checkout</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -221,11 +262,11 @@
                         <h4 class="font-semibold mb-2 text-gray-800">Order Summary</h4>
                         <div class="flex justify-between text-sm text-gray-600">
                             <span>Items ({{ cart.length }}):</span>
-                            <span>£{{ totalPrice }}</span>
+                            <span>£{{ cartTotalPrice }}</span>
                         </div>
                         <div class="flex justify-between font-bold text-lg text-gray-900 mt-2">
                             <span>Total:</span>
-                            <span>£{{ totalPrice }}</span>
+                            <span>£{{ cartTotalPrice }}</span>
                             
                         </div>
                     </div>
@@ -237,7 +278,7 @@
                         class="w-full bg-green-500 hover:bg-green-600 text-white py-3 px-6 rounded-lg text-lg font-semibold transition-colors duration-200 flex items-center justify-center"
                         :class="{'bg-gray-400 cursor-not-allowed hover:bg-gray-400': !isCheckoutValid}">
                         <i class="fas fa-credit-card mr-2"></i>
-                        Complete Order - {{ cartTotal }}
+                        Complete Order - £{{ cartTotalPrice }}
                     </button>
                 </div>
             </div>

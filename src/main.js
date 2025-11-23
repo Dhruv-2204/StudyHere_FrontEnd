@@ -81,7 +81,7 @@ const app = new Vue({
                     
                     return filtered;
                 },
-                cartTotal() {
+                cartTotalPrice() {
                     return this.cart.reduce((total, item) => total + item.price, 0);
                 },
                 isNameValid() {
@@ -97,19 +97,140 @@ const app = new Vue({
             },
             methods: {
                 addToCart(lesson) {
-                    this.cart.push(lesson);
-                    this.lessons.find(l => l.id === lesson.id).spaces--;
+                    if (lesson.spaces > 0) {
+                        // Check if lesson already in cart
+                        const existingCartItem = this.cart.find(item => item.id === lesson.id);
+                        
+                        if (existingCartItem) {
+                            // Increment quantity if already in cart
+                            existingCartItem.quantity++;
+                        } else {
+                            // Add new item to cart with quantity = 1
+                            this.cart.push({
+                                ...lesson,
+                                cartId: Date.now() + Math.random(),
+                                quantity: 1
+                            });
+                        }
+                        
+                        lesson.spaces--;
+                        // Update lesson spaces on backend as well
+                        this.updateLessonSpaces(lesson.id, lesson.spaces);
+                    }
                 },
                 removeFromCart(index) {
+                    const item = this.cart[index];
+                    const quantity = item.quantity || 1;
+                    
+                    // Find the original lesson and restore space (multiply by quantity)
+                    const lesson = this.lessons.find(l => l.id === item.id);
+                    if (lesson) {
+                        lesson.spaces += quantity;
+                        // Update lesson spaces on backend as well
+                        this.updateLessonSpaces(lesson.id, lesson.spaces);
+                    }
+                    
+                    // Remove the item from cart
                     this.cart.splice(index, 1);
                 },
-                checkout() {
-                    alert(`Thank you, ${this.checkoutName}! Your order totaling $${this.cartTotal} has been placed. We will contact you at ${this.checkoutPhone}.`);
-                    this.cart = [];
-                    this.checkoutName = '';
-                    this.checkoutPhone = '';
-                    this.showCart = false;
+
+                decreaseCartItemQuantity(index) {
+                    const item = this.cart[index];
+                    if (item.quantity > 1) {
+                        item.quantity--;
+                        // Restore one space to the lesson
+                        const lesson = this.lessons.find(l => l.id === item.id);
+                        if (lesson) {
+                            lesson.spaces++;
+                            this.updateLessonSpaces(lesson.id, lesson.spaces);
+                        }
+                    } else {
+                        // If quantity is 1, remove the item entirely
+                        this.removeFromCart(index);
+                    }
                 },
+
+                increaseCartItemQuantity(index) {
+                    const item = this.cart[index];
+                    const lesson = this.lessons.find(l => l.id === item.id);
+                    
+                    // Only increase if spaces are available
+                    if (lesson && lesson.spaces > 0) {
+                        item.quantity++;
+                        lesson.spaces--;
+                        this.updateLessonSpaces(lesson.id, lesson.spaces);
+                    }
+                },
+
+                async checkout() {
+                    if (this.isCheckoutValid) {
+                        try {
+                            // Prepare order data for backend
+                            const orderData = {
+                                name: this.checkoutName,
+                                phone: this.checkoutPhone,
+                                lessons: this.cart.map(item => ({
+                                    lessonId: item.id,
+                                    subject: item.subject,
+                                    price: item.price,
+                                    location: item.location,
+                                    date: item.date
+                                }))
+                            };
+                            
+                            // Send order to backend
+                            const response = await fetch(`${this.apiBaseUrl}/orders`, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify(orderData)
+                            });
+                            
+                            if (response.ok) {
+                                // // Update lesson spaces on backend
+                                // for (const item of this.cart) {
+                                //     await this.updateLessonSpaces(item.id, item.spaces);
+                                // }
+                                
+                                // Show modal instead of alert
+                                this.orderModalTitle = 'Order Submitted';
+                                this.orderModalType = 'success';
+                                this.orderModalMessage = `
+                                    <strong>Name:</strong> ${this.checkoutName}<br>
+                                    <strong>Total:</strong> £${this.totalPrice}<br><br>
+                                    Thank you for your order! We will contact you on ${this.checkoutPhone}.
+                                `;
+                                this.showOrderModal = true;
+                                
+                                // Reset cart and form
+                                this.cart = [];
+                                this.checkoutName = '';
+                                this.checkoutPhone = '';
+                                this.showCart = false;
+                                
+                                // Refresh lessons from backend to get updated spaces
+                                await this.fetchLessons();
+                            } else {
+                                // Show failure modal
+                                this.orderModalTitle = 'Order Failed';
+                                this.orderModalType = 'error';
+                                this.orderModalMessage = 'Failed to submit order. Please try again.';
+                                this.showOrderModal = true;
+                                await this.restoreSpacesAfterFailedOrder();
+                            }
+                        } catch (error) {
+                            console.error('Checkout error:', error);
+                            this.orderModalTitle = 'Network Error';
+                            this.orderModalType = 'error';
+                            this.orderModalMessage = 'Network error. Please check if backend is running.';
+                            this.showOrderModal = true;
+                            await this.restoreSpacesAfterFailedOrder();
+                        }
+                    }
+                },
+
+                
 
                 // FETCH LESSONS FROM BACKEND
                 async fetchLessons() {
@@ -162,14 +283,16 @@ const app = new Vue({
                     finalImage = images[subject] || 'default.jpg';
                     return `http://localhost:3000/images/${finalImage}`;
                 },
+
+                
                 toggleDarkMode() {
-            this.darkMode = !this.darkMode;
-            if (this.darkMode) {
-                document.body.classList.add('dark-mode');
-            } else {
-                document.body.classList.remove('dark-mode');
-            }
-        }
+                    this.darkMode = !this.darkMode;
+                    if (this.darkMode) {
+                        document.body.classList.add('dark-mode');
+                    } else {
+                        document.body.classList.remove('dark-mode');
+                    }
+                }
 
             },
             mounted() {
