@@ -50,23 +50,49 @@ const app = new Vue({
             },
             computed: {
                 FilteredLessons() {
-                    let filtered = this.lessons.filter(lesson =>
-                        lesson.subject.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-                        lesson.location.toLowerCase().includes(this.searchQuery.toLowerCase())
-                    );
-
-                    filtered.sort((a, b) => {
-                        let modifier = this.sortOrder === 'asc' ? 1 : -1;
-                        if (a[this.sortBy] < b[this.sortBy]) return -1 * modifier;
-                        if (a[this.sortBy] > b[this.sortBy]) return 1 * modifier;
-                        return 0;
+                    let filtered = this.lessons;
+                    if (this.searchQuery) {
+                        const query = this.searchQuery.toLowerCase();
+                        filtered = filtered.filter(lesson => 
+                            lesson.subject.toLowerCase().includes(query) ||
+                            lesson.location.toLowerCase().includes(query) ||
+                            lesson.price.toString().includes(query) ||
+                            lesson.spaces.toString().includes(query)
+                        );
+                    }
+                    
+                    // Sort
+                    filtered = filtered.sort((a, b) => {
+                        let aVal = a[this.sortBy];
+                        let bVal = b[this.sortBy];
+                        
+                        if (typeof aVal === 'string') {
+                            aVal = aVal.toLowerCase();
+                            bVal = bVal.toLowerCase();
+                        }
+                        
+                        if (this.sortOrder === 'asc') {
+                            return aVal > bVal ? 1 : -1;
+                        } else {
+                            return aVal < bVal ? 1 : -1;
+                        }
                     });
-
+                    
                     return filtered;
                 },
                 cartTotal() {
                     return this.cart.reduce((total, item) => total + item.price, 0);
+                },
+                isNameValid() {
+                    return /^[A-Za-z\s]+$/.test(this.checkoutName);
+                },
+                isPhoneValid() {
+                    return /^\d+$/.test(this.checkoutPhone);
+                },
+                isCheckoutValid() {
+                    return this.isNameValid && this.isPhoneValid && this.cart.length > 0;
                 }
+
             },
             methods: {
                 addToCart(lesson) {

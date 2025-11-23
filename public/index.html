@@ -148,17 +148,58 @@
                 </div>
 
                 <!-- checkout -->
-                <div v-if="cart.length > 0" class=" bg-white p-4 mb-4 rounded shadow hover:shadow-lg">
-                    <h2 class="font-bold text-2xl text-center mb-4">Checkout</h2>
-                    <p class="text-xl mb-4">Total: ${{ cartTotal }}</p>
-                    <div>
-                        <label for="">Name : </label>
-                        <input type="text" v-model="checkoutName" class="p-2 rounded w-full mb-4" placeholder="Enter your name">
-                        <label for="">Phone : </label>
-                        <input type="text" v-model="checkoutPhone" class="p-2 rounded w-full mb-4" placeholder="Enter your phone number">
+                <div v-if="cart.length > 0" class="border-t pt-6">
+                    <h3 class="text-lg font-semibold mb-4 text-gray-800">Checkout</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Full Name *</label>
+                            <input 
+                                type="text" 
+                                v-model="checkoutName" 
+                                placeholder="Enter your name"
+                                class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-sky-500"
+                                :class="{'border-red-500': checkoutName && !isNameValid}">
+                            <p v-if="checkoutName && !isNameValid" class="text-red-500 text-xs mt-1">
+                                Name must contain only letters
+                            </p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Phone Number *</label>
+                            <input 
+                                type="text" 
+                                v-model="checkoutPhone" 
+                                placeholder="Enter your phone number"
+                                class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-sky-500"
+                                :class="{'border-red-500': checkoutPhone && !isPhoneValid}">
+                            <p v-if="checkoutPhone && !isPhoneValid" class="text-red-500 text-xs mt-1">
+                                Phone must contain only numbers
+                            </p>
+                        </div>
                     </div>
-
-                    <button @click="checkout" class="bg-teal-500 text-white px-4 py-2 rounded hover:bg-green-700 w-full">Proceed to Checkout</button>
+                    
+                    <!-- Order Summary -->
+                    <div class="bg-gray-50 rounded-lg p-4 mb-4">
+                        <h4 class="font-semibold mb-2 text-gray-800">Order Summary</h4>
+                        <div class="flex justify-between text-sm text-gray-600">
+                            <span>Items ({{ cart.length }}):</span>
+                            <span>£{{ totalPrice }}</span>
+                        </div>
+                        <div class="flex justify-between font-bold text-lg text-gray-900 mt-2">
+                            <span>Total:</span>
+                            <span>£{{ totalPrice }}</span>
+                            
+                        </div>
+                    </div>
+                    
+                    <!-- Checkout Button -->
+                    <button 
+                        @click="checkout"
+                        :disabled="!isCheckoutValid"
+                        class="w-full bg-green-500 hover:bg-green-600 text-white py-3 px-6 rounded-lg text-lg font-semibold transition-colors duration-200 flex items-center justify-center"
+                        :class="{'bg-gray-400 cursor-not-allowed hover:bg-gray-400': !isCheckoutValid}">
+                        <i class="fas fa-credit-card mr-2"></i>
+                        Complete Order - {{ cartTotal }}
+                    </button>
                 </div>
             </div>
 
