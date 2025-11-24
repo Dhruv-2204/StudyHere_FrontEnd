@@ -40,7 +40,7 @@ const app = new Vue({
                 // ],
                 lessons: [],
                 // apiBaseUrl: 'http://localhost:3000/api',
-                apiBaseUrl: 'https://studyhere-backend-62pq.onrender.com/api',
+                apiBaseUrl: 'https://studyhere-backend-1-1vqv.onrender.com/api',
                 searchQuery: '',
                 sortBy: 'subject',
                 sortOrder: 'asc',
@@ -295,7 +295,7 @@ const app = new Vue({
 
                     };
                     finalImage = images[subject] || 'default.jpg';
-                    return `https://studyhere-backend-62pq.onrender.com/images/${finalImage}`;
+                    return `https://studyhere-backend-1-1vqv.onrender.com/images/${finalImage}`;
                 },
 
                 
