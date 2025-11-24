@@ -1,43 +1,6 @@
 const app = new Vue({
             el: '#app',
             data: {
-                // Hardcoded lessons data
-                // lessons: [{
-                //         "id": 1,
-                //         "subject": "Piano Lessons",
-                //         "location": "London City",
-                //         "price": 50,
-                //         "spaces": 5
-                //     },
-                //     {
-                //         "id": 2,
-                //         "subject": "Guitar Lessons",
-                //         "location": "Manchester",
-                //         "price": 40, 
-                //         "spaces": 3
-                //     },
-                //     {
-                //         "id": 3,
-                //         "subject": "Math Tutoring",
-                //         "location": "Birmingham",
-                //         "price": 30,
-                //         "spaces": 4
-                //     },
-                //     {
-                //         "id": 24,
-                //         "subject": "Guitars Lessons",
-                //         "location": "Manchester",
-                //         "price": 40, 
-                //         "spaces": 3
-                //     },
-                //     {
-                //         "id": 43,
-                //         "subject": "Maths Tutoring",
-                //         "location": "Birmingham",
-                //         "price": 30,
-                //         "spaces": 4
-                //     },
-                // ],
                 lessons: [],
                 // apiBaseUrl: 'http://localhost:3000/api',
                 apiBaseUrl: 'https://studyhere-backend-1-1vqv.onrender.com/api',
@@ -48,7 +11,11 @@ const app = new Vue({
                 checkoutName: '',
                 checkoutPhone: '',
                 showCart: false,
-                darkMode: false
+                darkMode: false,
+                showOrderModal: false,
+                orderModalTitle: '',
+                orderModalMessage: '',
+                orderModalType: 'info', // 'success' | 'error' | 'info'
             },
             computed: {
                 FilteredLessons() {
@@ -83,7 +50,7 @@ const app = new Vue({
                     return filtered;
                 },
                 cartTotalPrice() {
-                    return this.cart.reduce((total, item) => total + item.price, 0);
+                    return this.cart.reduce((total, item) => total + (item.price * (item.quantity || 1)), 0);
                 },
                 isNameValid() {
                     return /^[A-Za-z\s]+$/.test(this.checkoutName);
