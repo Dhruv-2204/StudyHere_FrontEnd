@@ -231,6 +231,27 @@ const app = new Vue({
                     }
                 },
 
+
+                // Hide modal without navigating away (used by the X button)
+                closeOrderModal() {
+                    this.showOrderModal = false;
+                    this.orderModalTitle = '';
+                    this.orderModalMessage = '';
+                    this.orderModalType = 'info';
+                },
+
+                // Close modal and return to lessons page (used by footer button)
+                confirmOrderClose() {
+                    this.showOrderModal = false;
+                    this.orderModalTitle = '';
+                    this.orderModalMessage = '';
+                    this.orderModalType = 'info';
+                    // Ensure lessons view is shown
+                    this.showCart = false;
+                    // Optionally scroll to top of lessons
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                },
+
                 // UPDATE LESSON SPACES ON BACKEND
                 async updateLessonSpaces(lessonId, newSpaces) {
                     try {
@@ -243,6 +264,18 @@ const app = new Vue({
                         });
                     } catch (error) {
                         console.error('Error updating lesson spaces:', error);
+                    }
+                },
+
+                async restoreSpacesAfterFailedOrder() {
+                    // Restore spaces in the frontend lessons array
+                    for (const item of this.cart) {
+                        const lesson = this.lessons.find(l => l.id === item.id);
+                        if (lesson) {
+                            lesson.spaces++;
+                            // Update lesson spaces on backend as well
+                            await this.updateLessonSpaces(lesson.id, lesson.spaces);
+                        }
                     }
                 },
 
