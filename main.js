@@ -166,7 +166,7 @@ const app = new Vue({
                                 this.orderModalType = 'success';
                                 this.orderModalMessage = `
                                     <strong>Name:</strong> ${this.checkoutName}<br>
-                                    <strong>Total:</strong> £${this.totalPrice}<br><br>
+                                    <strong>Total:</strong> £${this.cartTotalPrice}<br><br>
                                     Thank you for your order! We will contact you on ${this.checkoutPhone}.
                                 `;
                                 this.showOrderModal = true;
@@ -306,6 +306,11 @@ const app = new Vue({
                     } else {
                         document.body.classList.remove('dark-mode');
                     }
+                },
+
+                // Add search on back 
+                async searchOnBackend(){
+                    await fetch(`${this.apiBaseUrl}/lessons?search=${this.searchQuery}`);
                 }
 
             },
