@@ -39,7 +39,8 @@ const app = new Vue({
                 //     },
                 // ],
                 lessons: [],
-                apiBaseUrl: 'http://localhost:3000/api',
+                // apiBaseUrl: 'http://localhost:3000/api',
+                apiBaseUrl: 'https://studyhere-backend-62pq.onrender.com/api',
                 searchQuery: '',
                 sortBy: 'subject',
                 sortOrder: 'asc',
@@ -294,7 +295,7 @@ const app = new Vue({
 
                     };
                     finalImage = images[subject] || 'default.jpg';
-                    return `http://localhost:3000/images/${finalImage}`;
+                    return `https://studyhere-backend-62pq.onrender.com/images/${finalImage}`;
                 },
 
                 
