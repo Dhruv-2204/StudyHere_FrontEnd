@@ -299,9 +299,16 @@ const app = new Vue({
                 
                 toggleDarkMode() {
                     this.darkMode = !this.darkMode;
+                    localStorage.setItem('darkMode', JSON.stringify(this.darkMode));
+                    this.applyTheme();
+                },
+
+                applyTheme() {
                     if (this.darkMode) {
+                        document.documentElement.setAttribute('data-theme', 'dark');
                         document.body.classList.add('dark-mode');
                     } else {
+                        document.documentElement.removeAttribute('data-theme');
                         document.body.classList.remove('dark-mode');
                     }
                 },
@@ -322,6 +329,13 @@ const app = new Vue({
 
             },
             mounted() {
+                // Load saved dark mode preference
+                const savedDarkMode = localStorage.getItem('darkMode');
+                if (savedDarkMode !== null) {
+                    this.darkMode = JSON.parse(savedDarkMode);
+                    this.applyTheme();
+                }
+                
                 // Fetch lessons when the app is mounted
                 this.fetchLessons();
             }
