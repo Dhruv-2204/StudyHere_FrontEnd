@@ -34,13 +34,7 @@ const app = new Vue({
                 FilteredLessons() {
                     let filtered = this.lessons;
                     
-                    // Search
-                    if (this.searchQuery) {
-                        filtered = this.lessons.filter(lesson =>
-                            lesson.subject.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-                            lesson.location.toLowerCase().includes(this.searchQuery.toLowerCase())
-                        );
-                    }
+                    
                     
                     // Sort
                     filtered = filtered.sort((a, b) => {
@@ -315,14 +309,18 @@ const app = new Vue({
                     }
                 },
 
-                // Add search on back 
+                // Search on backend
                 async searchOnBackend() {
                     try {
-                        const response = await fetch(`${this.apiBaseUrl}/search?q=${this.searchQuery}`);
-                        if (response.ok) {
-                            const searchResults = await response.json();
-                            // You can choose to display these results instead of frontend-filtered ones
-                            console.log('Backend search results:', searchResults);
+                        if (this.searchQuery.trim() === '') {
+                            // If search is cleared, fetch all lessons
+                            await this.fetchLessons();
+                        } else {
+                            const response = await fetch(`${this.apiBaseUrl}/search?q=${encodeURIComponent(this.searchQuery)}`);
+                            if (response.ok) {
+                                const searchResults = await response.json();
+                                this.lessons = searchResults;
+                            }
                         }
                     } catch (error) {
                         console.error('Backend search error:', error);
