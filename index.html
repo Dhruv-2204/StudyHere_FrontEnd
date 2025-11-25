@@ -108,7 +108,7 @@
              <!-- Need to add selection for image -->
             <div v-if= "!showCart">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <div v-for="lesson in FilteredLessons()" :key="lesson.id" class=" bg-white p-4 mb-4 rounded shadow hover:shadow-lg">
+                    <div v-for="lesson in FilteredLessons" :key="lesson.id" class=" bg-white p-4 mb-4 rounded shadow hover:shadow-lg">
                         <!-- Large Banner Icon Area -->
                         <div class="h-40 bg-gradient-to-br from-sky-100 to-sky-50 flex items-center justify-center relative overflow-hidden">
                             <div class="absolute inset-0 opacity-10 flex items-center justify-center">

@@ -30,17 +30,16 @@ const app = new Vue({
                 },
                 isCheckoutValid() {
                     return this.isNameValid && this.isPhoneValid && this.cart.length > 0;
-                }
-
-            },
-            methods: {
-                async FilteredLessons() {
-
+                },
+                FilteredLessons() {
                     let filtered = this.lessons;
+                    
                     // Search
                     if (this.searchQuery) {
-                        await this.searchOnBackend();
-                        filtered = this.lessons;
+                        filtered = this.lessons.filter(lesson =>
+                            lesson.subject.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+                            lesson.location.toLowerCase().includes(this.searchQuery.toLowerCase())
+                        );
                     }
                     
                     // Sort
@@ -61,7 +60,10 @@ const app = new Vue({
                     });
                     
                     return filtered;
-                },
+                }
+
+            },
+            methods: {
                 addToCart(lesson) {
                     if (lesson.spaces > 0) {
                         // Check if lesson already in cart
@@ -329,13 +331,6 @@ const app = new Vue({
 
             },
             mounted() {
-                // Load saved dark mode preference
-                const savedDarkMode = localStorage.getItem('darkMode');
-                if (savedDarkMode !== null) {
-                    this.darkMode = JSON.parse(savedDarkMode);
-                    this.applyTheme();
-                }
-                
                 // Fetch lessons when the app is mounted
                 this.fetchLessons();
             }
