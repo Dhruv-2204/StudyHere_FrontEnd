@@ -3,7 +3,7 @@ const app = new Vue({
             data: {
                 lessons: [],
                 // apiBaseUrl: 'http://localhost:3000/api',
-                apiBaseUrl: 'https://studyhere-backend-1-1vqv.onrender.com/api',
+                apiBaseUrl: 'https://studyhere-backend-1-1vqv.onrender.com/endpoint',
                 searchQuery: '',
                 sortBy: 'subject',
                 sortOrder: 'asc',
@@ -18,16 +18,29 @@ const app = new Vue({
                 orderModalType: 'info', // 'success' | 'error' | 'info'
             },
             computed: {
-                FilteredLessons() {
+                
+                cartTotalPrice() {
+                    return this.cart.reduce((total, item) => total + (item.price * (item.quantity || 1)), 0);
+                },
+                isNameValid() {
+                    return /^[A-Za-z\s]+$/.test(this.checkoutName);
+                },
+                isPhoneValid() {
+                    return /^\d+$/.test(this.checkoutPhone);
+                },
+                isCheckoutValid() {
+                    return this.isNameValid && this.isPhoneValid && this.cart.length > 0;
+                }
+
+            },
+            methods: {
+                async FilteredLessons() {
+
                     let filtered = this.lessons;
+                    // Search
                     if (this.searchQuery) {
-                        const query = this.searchQuery.toLowerCase();
-                        filtered = filtered.filter(lesson => 
-                            lesson.subject.toLowerCase().includes(query) ||
-                            lesson.location.toLowerCase().includes(query) ||
-                            lesson.price.toString().includes(query) ||
-                            lesson.spaces.toString().includes(query)
-                        );
+                        await this.searchOnBackend();
+                        filtered = this.lessons;
                     }
                     
                     // Sort
@@ -49,21 +62,6 @@ const app = new Vue({
                     
                     return filtered;
                 },
-                cartTotalPrice() {
-                    return this.cart.reduce((total, item) => total + (item.price * (item.quantity || 1)), 0);
-                },
-                isNameValid() {
-                    return /^[A-Za-z\s]+$/.test(this.checkoutName);
-                },
-                isPhoneValid() {
-                    return /^\d+$/.test(this.checkoutPhone);
-                },
-                isCheckoutValid() {
-                    return this.isNameValid && this.isPhoneValid && this.cart.length > 0;
-                }
-
-            },
-            methods: {
                 addToCart(lesson) {
                     if (lesson.spaces > 0) {
                         // Check if lesson already in cart
@@ -309,8 +307,17 @@ const app = new Vue({
                 },
 
                 // Add search on back 
-                async searchOnBackend(){
-                    await fetch(`${this.apiBaseUrl}/lessons?search=${this.searchQuery}`);
+                async searchOnBackend() {
+                    try {
+                        const response = await fetch(`${this.apiBaseUrl}/search?q=${this.searchQuery}`);
+                        if (response.ok) {
+                            const searchResults = await response.json();
+                            // You can choose to display these results instead of frontend-filtered ones
+                            console.log('Backend search results:', searchResults);
+                        }
+                    } catch (error) {
+                        console.error('Backend search error:', error);
+                    }
                 }
 
             },
