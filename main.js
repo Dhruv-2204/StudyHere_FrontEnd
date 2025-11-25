@@ -137,7 +137,7 @@ const app = new Vue({
                             const orderData = {
                                 name: this.checkoutName,
                                 phone: this.checkoutPhone,
-                                lessons: this.cart.map(item => ({
+                                lessons: this.cart.map(item => ({  // transform cart items into a clean structure for the backend
                                     lessonId: item.id,
                                     subject: item.subject,
                                     price: item.price,
