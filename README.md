@@ -20,3 +20,6 @@ Vue.js frontend application for an after-school classes booking system. This app
 -  Checkout form with validation (name: letters only, phone: numbers only)
 -  Full-text search/search as you type functionality
 -  Responsive design
+
+## Link to Github Page: 
+https://dhruv-2204.github.io/StudyHere_FrontEnd/
