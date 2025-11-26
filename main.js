@@ -2,7 +2,6 @@ const app = new Vue({
             el: '#app',
             data: {
                 lessons: [],
-                // apiBaseUrl: 'http://localhost:3000/api',
                 apiBaseUrl: 'https://studyhere-backend-1-1vqv.onrender.com/endpoint',
                 searchQuery: '',
                 sortBy: 'subject',
@@ -254,6 +253,7 @@ const app = new Vue({
                     }
                 },
 
+                // ICONS AND IMAGES
                 getSubjectIcon(subject) {
                     const icons = {
                         'Math': 'fas fa-calculator',
@@ -292,7 +292,7 @@ const app = new Vue({
                     return `https://studyhere-backend-1-1vqv.onrender.com/images/${finalImage}`;
                 },
 
-                
+                // Dark mode toggle
                 toggleDarkMode() {
                     this.darkMode = !this.darkMode;
                     localStorage.setItem('darkMode', JSON.stringify(this.darkMode));
